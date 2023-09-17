@@ -1,13 +1,3 @@
-**Hướng dẫn chạy**
-Đối với ảnh:
-```python
-python facial_landmarks.py --shape_predictor shape_predictor_68_face_landmarks.dat --image input_image.png
-```
-Đối với video từ webcam:
-```python
-python video_landmarks.py --shape_predictor shape_predictor_68_face_landmarks.dat
-```
-
 **Facial landmarks** được sử dụng để định vị và biểu diễn **salient regions** (các vùng nổi bật) của khuôn mặt như:
 * Các mắt
 * Lông mày (eyebrows)
