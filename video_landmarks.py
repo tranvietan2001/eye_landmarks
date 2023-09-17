@@ -5,6 +5,17 @@ import argparse
 import cv2 
 import dlib
 import imutils
+from scipy.spatial import distance as dist
+
+threshold = 0.20 # nguong canh bao (co the thay doi tuy vao mat moi nguoi, phu hop nhat laf 0.25): canh bao khi < threshold, ngung canh bao khi >= threshold
+couter = 0 
+total = 100 # muc canh bao
+def eye_aspect_ratio(eye):
+    A = dist.euclidean(eye[1], eye[5])
+    B = dist.euclidean(eye[2], eye[4])
+    C = dist.euclidean(eye[0], eye[3])
+    ear = (A+B) / (2.0 * C)
+    return ear
 
 ap = argparse.ArgumentParser()
 ap.add_argument("-p", "--shape_predictor", required=True, help="path to facial landmark predictor")     # dlib’s pre-trained facial landmark detector (phát hiện 68 landmarks)
@@ -17,7 +28,8 @@ detector = dlib.get_frontal_face_detector()   # dựa trên HOG + Linear SVM tì
 
 # Tạo the facial landmerk predictor
 predictor = dlib.shape_predictor(args["shape_predictor"])
-
+lStart, lEnd = face_utils.FACIAL_LANDMARKS_IDXS["left_eye"]
+rStart, rEnd = face_utils.FACIAL_LANDMARKS_IDXS["right_eye"]
 while True:
     ret, frame = video.read()
 
@@ -50,8 +62,32 @@ while True:
 
         # duyệt qua các coordinates of facial landmarks (x, y) và vẽ chúng lên ảnh
         for (x, y) in shape:
-            cv2.circle(frame, (x, y), 1, (255, 0, 0), -1)
+            
+            leftEye = shape[lStart:lEnd]
+            rightEye = shape[rStart:rEnd]
+            leftEAR = eye_aspect_ratio(leftEye)
+            rightEAR = eye_aspect_ratio(rightEye)
+            ear = (leftEAR+ rightEAR) / 2.0
+            leftEyeHull = cv2.convexHull(leftEye)
+            rightEyeHull = cv2.convexHull(rightEye)
+            # cv2.circle(frame, (x, y), 1, (255, 0, 0), -1) //hien 68 diem quanh khung mat
+            cv2.drawContours(frame, [leftEyeHull], -1, (0,255,0),1) #hien vong quanh mat trai
+            cv2.drawContours(frame, [rightEyeHull], -1, (0,255,0),1)  #hien vong quanh mat phai
 
+            # print(ear)
+            if ear >= threshold:
+                couter = 0
+                print(couter)
+                cv2.putText(frame, "Trang thai binh thuong!",(10,50), cv2.FONT_HERSHEY_SIMPLEX, 2, (0,255,0), 2)
+            else:
+                couter+=1
+                print(couter)
+            if couter > total:
+                cv2.putText(frame, "Ngu gat!",(10, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (0,0,255), 2)
+                couter = 0
+            else:
+                couter = 0
+                cv2.putText(frame, "Trang thai binh thuong!",(10,50), cv2.FONT_HERSHEY_SIMPLEX, 2, (0,255,0), 2)
         # hiển thị ảnh đầu ta với face detections + facial landmarks
         cv2.imshow("Output", frame)
 
