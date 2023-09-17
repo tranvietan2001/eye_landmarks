@@ -1,4 +1,4 @@
-# USAGE
+# chay lenh su tren terminal de run file python
 # python facial_landmarks.py --shape_predictor shape_predictor_68_face_landmarks.dat --image input_image.png
 from imutils import face_utils
 import argparse

@@ -9,7 +9,8 @@ from scipy.spatial import distance as dist
 
 threshold = 0.20 # nguong canh bao (co the thay doi tuy vao mat moi nguoi, phu hop nhat laf 0.25): canh bao khi < threshold, ngung canh bao khi >= threshold
 couter = 0 
-total = 100 # muc canh bao
+total = 1000 # muc canh bao so khung hinh
+
 def eye_aspect_ratio(eye):
     A = dist.euclidean(eye[1], eye[5])
     B = dist.euclidean(eye[2], eye[4])
@@ -82,12 +83,13 @@ while True:
             else:
                 couter+=1
                 print(couter)
-            if couter > total:
-                cv2.putText(frame, "Ngu gat!",(10, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (0,0,255), 2)
-                couter = 0
-            else:
-                couter = 0
-                cv2.putText(frame, "Trang thai binh thuong!",(10,50), cv2.FONT_HERSHEY_SIMPLEX, 2, (0,255,0), 2)
+                if couter > total:
+                    cv2.putText(frame, "Ngu gat!",(10, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, (0,0,255), 2)
+                    # couter = 0
+                    couter = total
+                # else:
+                #     # couter = 0
+                #     cv2.putText(frame, "Trang thai binh thuong!",(10,50), cv2.FONT_HERSHEY_SIMPLEX, 2, (0,255,0), 2)
         # hiển thị ảnh đầu ta với face detections + facial landmarks
         cv2.imshow("Output", frame)
 

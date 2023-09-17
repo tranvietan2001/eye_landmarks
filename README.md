@@ -98,6 +98,8 @@ Phát hiện facial landmarks trong ảnh được thực hiện thông qua 2 b�
 1. https://www.pyimagesearch.com/2017/04/03/facial-landmarks-dlib-opencv-python/
 2. https://github.com/Luca96/dlib-minified-models
 3. https://livecodestream.dev/post/detecting-face-features-with-python/
+4. https://huytranvan2010.github.io/Facial-Landmarks-with-dlib/
+
 
 
 
